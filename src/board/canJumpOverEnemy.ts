@@ -1,0 +1,31 @@
+import { BoardSchema, Color, Position } from '../components/types'
+import { colorStep } from './boardConstants'
+
+type NextJump = {
+    movement: Position
+    mustCapture: boolean
+}
+
+export const canJumpOverEnemy = (board: BoardSchema, turn: Color, sourcePosition: Position, possibleJump: Position, level = 1): NextJump | undefined => {
+    const { row, col } = possibleJump
+
+    if (level > 2) {
+        return undefined
+    }
+
+    if (row === -1 || row === 8 || col === -1 || col === 8) {
+        return undefined
+    }
+
+    if (board[row][col]?.color === turn.toLowerCase()) {
+        return undefined
+    }
+
+    if (!board[row][col]) {
+        return { movement: { row, col }, mustCapture: level > 1 }
+    }
+
+    const colStep = possibleJump.col - sourcePosition.col
+
+    return canJumpOverEnemy(board, turn, possibleJump, { col: col + colStep, row: row + colorStep[turn] }, level + 1)
+}
