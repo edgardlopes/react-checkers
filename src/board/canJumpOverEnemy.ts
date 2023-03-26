@@ -1,5 +1,4 @@
 import { BoardSchema, Color, Position } from '../components/types'
-import { colorStep } from './boardConstants'
 
 type NextJump = {
     movement: Position
@@ -25,7 +24,8 @@ export const canJumpOverEnemy = (board: BoardSchema, turn: Color, sourcePosition
         return { movement: { row, col }, mustCapture: level > 1 }
     }
 
+    const rowStep = possibleJump.row - sourcePosition.row
     const colStep = possibleJump.col - sourcePosition.col
 
-    return canJumpOverEnemy(board, turn, possibleJump, { col: col + colStep, row: row + colorStep[turn] }, level + 1)
+    return canJumpOverEnemy(board, turn, possibleJump, { col: col + colStep, row: row + rowStep }, level + 1)
 }

@@ -1,13 +1,11 @@
 import { useReducer, useState } from 'react'
 import { initialState } from '../board/boardConstants'
 import { canJumpOverEnemy } from '../board/canJumpOverEnemy'
-import { canKingJumpOverEnemy } from '../board/canKingJumpOverEnemy'
 import { getAvailableMoves } from '../board/getAvailableMoves'
-import { getKingAvailableMoves } from '../board/getKingAvailableMoves'
 import { movePiece } from '../board/movePiece'
-import { BlackKing, BlackMan, WhiteKing, WhiteMan } from './Piece'
+import { BlackMan, WhiteMan } from './Piece'
 import { Row } from './Row'
-import { BoardSchema, Color, Piece, Position } from './types'
+import { Color, Piece, Position } from './types'
 
 type Score = Record<Color, number>
 
@@ -60,22 +58,16 @@ export function Board() {
 
         setCurrentPiece(pieceClicked)
 
-        let movements
-        if (piece.isKing) {
-            movements = getKingAvailableMoves(pieceClicked)
-                .map((position) => canKingJumpOverEnemy(board, turn, pieceClicked, position))
-                .filter((square) => square)
-        } else {
-            movements = getAvailableMoves(pieceClicked, turn)
-                .map((position) => canKingJumpOverEnemy(board, turn, pieceClicked, position))
-                .filter((square) => square)
-        }
+        const movements = getAvailableMoves(pieceClicked, piece)
+            .map((position) => canJumpOverEnemy(board, turn, pieceClicked, position))
+            .filter((square) => square)
 
-        const haveToEat = !!movements.find((a) => a?.mustCapture)
-        if (haveToEat) {
-            setAvailableMoves(movements.filter((a) => a?.mustCapture).map((a) => a?.movement) as Position[])
+        const mustCaptureMovements = movements.filter((a) => a?.mustCapture)
+
+        if (mustCaptureMovements.length) {
+            setAvailableMoves(mustCaptureMovements.map((square) => square?.movement) as Position[])
         } else {
-            setAvailableMoves(movements.map((a) => a?.movement) as Position[])
+            setAvailableMoves(movements.map((square) => square?.movement) as Position[])
         }
     }
 
@@ -113,12 +105,20 @@ export function Board() {
             </div>
 
             <div className="info board">
-                <div>
-                    Current turn
+                <div className="current-turn">
+                    <span>Current turn</span>
                     {turn === 'black' ? <BlackMan onClick={() => {}} /> : <WhiteMan onClick={() => {}} />}
                 </div>
-                <div>Black: {score.black}</div>
-                <div>White: {score.white}</div>
+                <div className="score">
+                    <div>
+                        <BlackMan onClick={() => {}} />
+                        <span> {score.black}</span>
+                    </div>
+                    <div>
+                        <WhiteMan onClick={() => {}} />
+                        <span> {score.white}</span>
+                    </div>
+                </div>
             </div>
         </div>
     )
