@@ -1,57 +1,67 @@
 import { useReducer, useState } from 'react'
-import { initialState } from '../board/boardConstants'
+import { borderLimit, initialBoard } from '../board/boardConstants'
 import { canJumpOverEnemy } from '../board/canJumpOverEnemy'
 import { getAvailableMoves } from '../board/getAvailableMoves'
 import { movePiece } from '../board/movePiece'
 import { BlackMan, WhiteMan } from './Piece'
 import { Row } from './Row'
-import { Color, Piece, Position } from './types'
+import { BoardSchema, Color, Piece, Position } from './types'
 
 type Score = Record<Color, number>
 
-// interface BoardState {
-//     board: BoardSchema,
-//     score: Score,
-//     turn: Color,
-//     availableMoves: Position[],
-//     currentPiece: Position | undefined
-// }
+interface BoardWithScoreState {
+    board: BoardSchema
+    score: Score
+    turn: Color
+}
 
-// type BoardActionType = 'pieceClicked' | 'squareClicked'
+type BoardActionType = 'pieceMoved'
 
-// interface BoardAction {
-//     type: BoardActionType,
-//     payload: {
-//         sourcePosition: Position,
-//         finalPosition: Position
-//     }
-// }
+interface BoardAction {
+    type: BoardActionType
+    payload: {
+        sourcePosition: Position
+        finalPosition: Position
+    }
+}
 
-// const myReducer = (state: BoardState, action: BoardAction): BoardState => {
-//     if(action.type === 'pieceClicked') {
+const myReducer = (state: BoardWithScoreState, { type, payload }: BoardAction): BoardWithScoreState => {
+    if (type === 'pieceMoved') {
+        const { finalPosition, sourcePosition } = payload
+        console.log(`moving piece ${sourcePosition} to `, finalPosition)
 
-//     }
+        const { board: newBoard, hasCaptured } = movePiece(state.board, sourcePosition, finalPosition)
+        const captureScore = hasCaptured ? 1 : 0
 
-//     return state;
-// }
+        if (borderLimit[state.turn] === finalPosition.row) {
+            newBoard[finalPosition.row][finalPosition.col]!.isKing = true
+        }
+
+        return {
+            board: newBoard,
+            score: { ...state.score, [state.turn]: state.score[state.turn] + captureScore },
+            turn: state.turn === 'white' ? 'black' : 'white',
+        }
+    }
+
+    return state
+}
 
 export function Board() {
-    const [turn, setTurn] = useState<Color>('white')
+    // const [turn, setTurn] = useState<Color>('white')
     const [availableMoves, setAvailableMoves] = useState<Position[]>([])
     const [currentPiece, setCurrentPiece] = useState<Position | undefined>()
-    const [board, setBoard] = useState(initialState)
-    const [score, setScore] = useState<Score>({ black: 0, white: 0 })
+    // const [board, setBoard] = useState(initialState)
+    // const [score, setScore] = useState<Score>({ black: 0, white: 0 })
 
-    // const [state, dispatch] = useReducer(myReducer, {
-    //     board: initialState,
-    //     score: { 'black': 0, 'white': 0 },
-    //     turn: 'white',
-    //     availableMoves: [],
-    //     currentPiece: undefined
-    // })
+    const [state, dispatch] = useReducer(myReducer, {
+        board: initialBoard,
+        score: { black: 0, white: 0 },
+        turn: 'white',
+    })
 
     function pieceClicked(pieceClicked: Position, piece: Piece) {
-        if (piece?.color !== turn) {
+        if (piece?.color !== state.turn) {
             console.log('invalid move')
             return
         }
@@ -59,7 +69,7 @@ export function Board() {
         setCurrentPiece(pieceClicked)
 
         const movements = getAvailableMoves(pieceClicked, piece)
-            .map((position) => canJumpOverEnemy(board, turn, pieceClicked, position))
+            .map((position) => canJumpOverEnemy(state.board, state.turn, pieceClicked, position))
             .filter((square) => square)
 
         const mustCaptureMovements = movements.filter((a) => a?.mustCapture)
@@ -71,52 +81,55 @@ export function Board() {
         }
     }
 
-    function squareClicked({ row, col }: Position) {
+    function squareClicked(finalPosition: Position) {
         if (!currentPiece) throw new Error('Does not have selected piece')
 
-        console.log(`moving piece ${currentPiece} to `, { row, col })
+        // console.log(`moving piece ${currentPiece} to `, { row, col })
 
-        const { board: newBoard, hasCaptured } = movePiece(board, currentPiece, { row, col })
+        // const { board: newBoard, hasCaptured } = movePiece(board, currentPiece, { row, col })
 
-        if (hasCaptured) {
-            setScore({ ...score, [turn]: score[turn] + 1 })
-        }
+        // if (hasCaptured) {
+        //     setScore({ ...score, [turn]: score[turn] + 1 })
+        // }
 
-        if (turn === 'white' && row === 0) {
-            newBoard[row][col]!.isKing = true
-        }
+        // if (borderLimit[turn] === row) {
+        //     newBoard[row][col]!.isKing = true
+        // }
 
-        if (turn === 'black' && row === 7) {
-            newBoard[row][col]!.isKing = true
-        }
+        dispatch({ type: 'pieceMoved', payload: { sourcePosition: currentPiece, finalPosition } })
 
-        setBoard(newBoard)
+        // setBoard(newBoard)
         setCurrentPiece(undefined)
-        setTurn(turn === 'white' ? 'black' : 'white')
+        // setTurn(turn === 'white' ? 'black' : 'white')
         setAvailableMoves([])
+    }
+
+    function undo() {
+        console.log('undo')
     }
 
     return (
         <div className="container">
             <div className="board">
-                {board.map((rowData, rowIndex) => {
+                {state.board.map((rowData, rowIndex) => {
                     return <Row squareClicked={squareClicked} key={rowIndex.toString()} rowIndex={rowIndex} data={rowData} pieceClicked={pieceClicked} availableMoves={availableMoves} />
                 })}
             </div>
 
             <div className="info board">
+                <button onClick={undo}>Undo</button>
                 <div className="current-turn">
                     <span>Current turn</span>
-                    {turn === 'black' ? <BlackMan onClick={() => {}} /> : <WhiteMan onClick={() => {}} />}
+                    {state.turn === 'black' ? <BlackMan onClick={() => {}} /> : <WhiteMan onClick={() => {}} />}
                 </div>
                 <div className="score">
                     <div>
                         <BlackMan onClick={() => {}} />
-                        <span> {score.black}</span>
+                        <span> {state.score.black}</span>
                     </div>
                     <div>
                         <WhiteMan onClick={() => {}} />
-                        <span> {score.white}</span>
+                        <span> {state.score.white}</span>
                     </div>
                 </div>
             </div>

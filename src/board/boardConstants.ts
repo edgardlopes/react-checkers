@@ -17,7 +17,7 @@ const emptyBoard: BoardSchema = [
 
 export const createEmptyBoard = () => cloneBoard(emptyBoard)
 
-export const initialState: BoardSchema = [
+export const initialBoard: BoardSchema = [
     [null, { ...black }, null, { ...black }, null, { ...black }, null, { ...black }],
     [{ ...black }, null, { ...black }, null, { ...black }, null, { ...black }, null],
     [null, { ...black }, null, { ...black }, null, { ...black }, null, { ...black }],
