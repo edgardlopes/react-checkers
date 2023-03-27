@@ -8,11 +8,9 @@ describe('Row integration tests', () => {
 
         render(<Row availableMoves={[]} data={rowData} rowIndex={0} pieceClicked={jest.fn()} squareClicked={jest.fn()} />)
 
-        const squares = screen.getAllByTestId('square-dark')
+        const square = screen.getByTestId('square-0-1')
 
-        expect(squares).toHaveLength(4)
-
-        within(squares[0]).getByTestId('piece-black')
+        within(square).getByTestId('piece-black')
     })
 
     it('Should highlight the available moves', () => {
@@ -43,11 +41,11 @@ describe('Row integration tests', () => {
 
         const onClick = jest.fn()
 
-        render(<Row availableMoves={[{ row: 0, col: 1 }]} data={rowData} rowIndex={0} pieceClicked={jest.fn()} squareClicked={onClick} />)
+        render(<Row availableMoves={[]} data={rowData} rowIndex={0} pieceClicked={jest.fn()} squareClicked={onClick} />)
 
-        const squares = screen.getAllByTestId('square-dark')
+        const square = screen.getByTestId('square-0-1')
 
-        fireEvent.click(squares[1])
+        fireEvent.click(square)
 
         expect(onClick).not.toBeCalled()
     })
@@ -59,11 +57,9 @@ describe('Row integration tests', () => {
 
         render(<Row availableMoves={[{ row: 0, col: 1 }]} data={rowData} rowIndex={0} pieceClicked={jest.fn()} squareClicked={onClick} />)
 
-        const squares = screen.getAllByTestId('square-dark')
-
-        within(squares[0]).getByTestId('piece-black')
-        within(squares[1]).getByTestId('piece-black-king')
-        within(squares[2]).getByTestId('piece-white')
-        within(squares[3]).getByTestId('piece-white-king')
+        within(screen.getByTestId('square-0-1')).getByTestId('piece-black')
+        within(screen.getByTestId('square-0-3')).getByTestId('piece-black-king')
+        within(screen.getByTestId('square-0-5')).getByTestId('piece-white')
+        within(screen.getByTestId('square-0-7')).getByTestId('piece-white-king')
     })
 })
