@@ -1,0 +1,39 @@
+.info {
+    background-color: var(--lighSquare);
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.button-group button {
+    flex: 1;
+}
+
+.current-turn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.current-turn span {
+    font-size: 2rem;
+    width: 70%;
+}
+
+.score {
+    flex-grow: 1;
+}
+
+.score div {
+    margin: 10px 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 50%;
+}
+
+.score span {
+    font-size: 2rem;
+}

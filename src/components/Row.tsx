@@ -36,7 +36,7 @@ export const Row: React.FC<Props> = ({ rowIndex, data, availableMoves = [], piec
     }
 
     return (
-        <div className="row">
+        <div className="flex">
             {data.map((piece: Piece, colIndex: number) => {
                 const isAvailableMove = !!availableMoves.find((position) => position.row === rowIndex && position.col === colIndex)
                 return (

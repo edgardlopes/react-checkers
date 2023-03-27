@@ -2,6 +2,8 @@ import React from 'react'
 import crown from '../assets/crown.svg'
 import { Piece } from './types'
 
+import './Piece.css'
+
 interface Props {
     onClick: (type: Piece) => void
 }

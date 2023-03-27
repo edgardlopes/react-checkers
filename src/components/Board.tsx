@@ -7,7 +7,7 @@ import { getPiecesToMove } from '../board/getPiecesToMove'
 import { movePiece } from '../board/movePiece'
 import { getRandom } from '../utils/getRandom'
 import useUndoReducer from '../utils/useUndo'
-import { BlackMan, WhiteMan } from './Piece'
+import { Info } from './Info'
 import { Row } from './Row'
 import { BoardWithScoreState, Piece, Position } from './types'
 
@@ -125,10 +125,10 @@ export const Board: React.FC<Props> = ({ initialGameState }) => {
     }
 
     return (
-        <div className="container">
+        <div className="flex container">
             <div className="board">
                 {state.gameOver && (
-                    <div className="blurred">
+                    <div className="flex blurred">
                         <div>{state.score.black > state.score.white ? 'Black wins!' : 'white wins!'}</div>
                         <button onClick={() => dispatch({ type: 'newGame' })}>New game</button>
                     </div>
@@ -138,29 +138,7 @@ export const Board: React.FC<Props> = ({ initialGameState }) => {
                 })}
             </div>
 
-            <div className="info board">
-                <div className="button-group">
-                    <button disabled={!canUndo} onClick={() => dispatch({ type: 'UNDO' })}>
-                        Undo
-                    </button>
-                    <button onClick={() => dispatch({ type: 'newGame' })}>New Game</button>
-                </div>
-
-                <div className="current-turn">
-                    <span>Current turn</span>
-                    {state.turn === 'black' ? <BlackMan onClick={() => {}} /> : <WhiteMan onClick={() => {}} />}
-                </div>
-                <div className="score">
-                    <div>
-                        <BlackMan onClick={() => {}} />
-                        <span> {state.score.black}</span>
-                    </div>
-                    <div>
-                        <WhiteMan onClick={() => {}} />
-                        <span> {state.score.white}</span>
-                    </div>
-                </div>
-            </div>
+            <Info canUndo={canUndo} onNewGameClick={() => dispatch({ type: 'newGame' })} onUndoClick={() => dispatch({ type: 'UNDO' })} score={state.score} turn={state.turn} />
         </div>
     )
 }

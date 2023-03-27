@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+  
+:root {
+    --valid-screen: calc(100vh - 70px);
+    --squareSize: calc(var(--valid-screen) / 8); 
+    --lighSquare: #E4D1B3;
+    --darkSquare: #261A1C; 
+    --pieceWidth: 70%;
+    --defaultBorder: #fdd28f 10px solid;
+}
+  
+.flex {
+    display: flex;
+}
+
+
+button {
+    padding: 10px 20px;
+    border: 0;
+    height: 40px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 1px 1px 4px black;
+    cursor: pointer;
+}
+  
+button:hover {
+    background-color: #fdd28f;
+}
+  

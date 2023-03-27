@@ -1,5 +1,7 @@
 import React from 'react'
 
+import './Square.css'
+
 type Props = React.PropsWithChildren<{
     row: number
     column: number
@@ -13,7 +15,8 @@ export const Square: React.FC<Props> = ({ column, onClick, row, selected, childr
     const isLight = (isEvenRow && isEvenColumn) || (!isEvenColumn && !isEvenRow)
 
     return (
-        <div onClick={onClick} className={`square ${isLight ? 'light' : 'dark'} ${selected ? 'selected' : ''}`}>
+        <div onClick={onClick} className={`square ${isLight ? 'light' : 'dark'}`}>
+            {selected && <div className="blurred"></div>}
             {children}
         </div>
     )
