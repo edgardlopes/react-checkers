@@ -2,21 +2,21 @@
     margin: 0;
     padding: 0;
     font-family: sans-serif;
+    text-transform: uppercase;
 }
-  
+
 :root {
     --valid-screen: calc(100vh - 70px);
-    --squareSize: calc(var(--valid-screen) / 8); 
-    --lighSquare: #E4D1B3;
-    --darkSquare: #261A1C; 
+    --squareSize: calc(var(--valid-screen) / 8);
+    --lighSquare: #e4d1b3;
+    --darkSquare: #261a1c;
     --pieceWidth: 70%;
     --defaultBorder: #fdd28f 10px solid;
 }
-  
+
 .flex {
     display: flex;
 }
-
 
 button {
     padding: 10px 20px;
@@ -29,8 +29,7 @@ button {
     box-shadow: 1px 1px 4px black;
     cursor: pointer;
 }
-  
+
 button:hover {
     background-color: #fdd28f;
 }
-  

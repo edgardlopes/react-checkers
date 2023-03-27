@@ -3,6 +3,7 @@
     width: 500px;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .button-group button {
@@ -13,7 +14,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 .current-turn span {
@@ -21,12 +22,18 @@
     width: 70%;
 }
 
+.current-turn > div {
+    width: 10%;
+    aspect-ratio: 1;
+}
+
 .score {
+    align-self: flex-start;
     flex-grow: 1;
 }
 
 .score div {
-    margin: 10px 0px;
+    margin: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
