@@ -14,7 +14,6 @@ export const movePiece = (board: BoardSchema, sourcePosition: Position, finalPos
     const squaresWalked = Math.abs(finalPosition.col - sourcePosition.col)
 
     if (squaresWalked > 2) {
-        console.log('Invalid move')
         return { board, hasCaptured: false }
     }
 
