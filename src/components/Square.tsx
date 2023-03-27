@@ -14,9 +14,11 @@ export const Square: React.FC<Props> = ({ column, onClick, row, selected, childr
     const isEvenColumn = column % 2 === 0
     const isLight = (isEvenRow && isEvenColumn) || (!isEvenColumn && !isEvenRow)
 
+    const isLightString = isLight ? 'light' : 'dark'
+
     return (
-        <div onClick={onClick} className={`square ${isLight ? 'light' : 'dark'}`}>
-            {selected && <div className="blurred"></div>}
+        <div onClick={onClick} data-testid={`square-${isLightString}`} className={`square ${isLightString}`}>
+            {selected && <div data-testid="highlighted" className="blurred"></div>}
             {children}
         </div>
     )

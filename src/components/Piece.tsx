@@ -12,7 +12,7 @@ export type PieceComponent = React.FunctionComponent<Props>
 
 export const BlackMan: PieceComponent = () => {
     return (
-        <div className={'piece black'}>
+        <div data-testid="piece-black" className={'piece black'}>
             <div></div>
         </div>
     )
@@ -20,7 +20,7 @@ export const BlackMan: PieceComponent = () => {
 
 export const WhiteMan: PieceComponent = ({ onClick }) => {
     return (
-        <div className={'piece red'} onMouseOver={() => onClick && onClick({ color: 'white', isKing: false })}>
+        <div data-testid="piece-white" className={'piece red'} onMouseOver={() => onClick && onClick({ color: 'white', isKing: false })}>
             <div></div>
         </div>
     )
@@ -28,7 +28,7 @@ export const WhiteMan: PieceComponent = ({ onClick }) => {
 
 export const WhiteKing: PieceComponent = ({ onClick }) => {
     return (
-        <div className={'piece red'} onMouseOver={() => onClick && onClick({ color: 'white', isKing: true })}>
+        <div data-testid="piece-white-king" className={'piece red'} onMouseOver={() => onClick && onClick({ color: 'white', isKing: true })}>
             <div>
                 <img src={crown} alt="A white king" />
             </div>
@@ -38,7 +38,7 @@ export const WhiteKing: PieceComponent = ({ onClick }) => {
 
 export const BlackKing: PieceComponent = () => {
     return (
-        <div className={'piece black'}>
+        <div data-testid="piece-black-king" className={'piece black'}>
             <div>
                 <img src={crown} alt="A black king" />
             </div>

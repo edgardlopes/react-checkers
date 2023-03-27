@@ -1,69 +1,13 @@
 import { useEffect, useState } from 'react'
-import { borderLimit, createInitialBoard } from '../board/boardConstants'
 import { canJumpOverEnemy } from '../board/canJumpOverEnemy'
-import { cloneBoard } from '../board/cloneBoard'
 import { getAvailableMoves } from '../board/getAvailableMoves'
 import { getPiecesToMove } from '../board/getPiecesToMove'
-import { movePiece } from '../board/movePiece'
+import { boardReducer } from '../utils/boardReducer'
 import { getRandom } from '../utils/getRandom'
 import useUndoReducer from '../utils/useUndo'
 import { Info } from './Info'
 import { Row } from './Row'
 import { BoardWithScoreState, Piece, Position } from './types'
-
-type BoardActionType = 'pieceMoved' | 'outOfMoves' | 'newGame'
-
-interface BoardAction {
-    type: BoardActionType
-    payload: {
-        sourcePosition: Position
-        finalPosition: Position
-    }
-}
-
-const myReducer = (state: BoardWithScoreState, { type, payload }: BoardAction): BoardWithScoreState => {
-    if (type === 'pieceMoved') {
-        const { finalPosition, sourcePosition } = payload
-        console.log(`moving piece ${sourcePosition} to `, finalPosition)
-
-        const { board: newBoard, hasCaptured } = movePiece(state.board, sourcePosition, finalPosition)
-        const captureScore = hasCaptured ? 1 : 0
-
-        if (borderLimit[state.turn] === finalPosition.row) {
-            newBoard[finalPosition.row][finalPosition.col]!.isKing = true
-        }
-
-        return {
-            board: newBoard,
-            score: { ...state.score, [state.turn]: state.score[state.turn] + captureScore },
-            turn: state.turn === 'white' ? 'black' : 'white',
-            gameOver: state.score.black === 12 || state.score.white === 12,
-        }
-    }
-
-    if (type === 'outOfMoves') {
-        return {
-            board: cloneBoard(state.board),
-            score: { ...state.score },
-            turn: state.turn === 'white' ? 'black' : 'white',
-            gameOver: true,
-        }
-    }
-
-    if (type === 'newGame') {
-        console.log('new game!!')
-        const board = createInitialBoard()
-        console.log(board)
-        return {
-            board,
-            score: { black: 0, white: 0 },
-            turn: 'white',
-            gameOver: false,
-        }
-    }
-
-    return state
-}
 
 type Props = {
     initialGameState: BoardWithScoreState
@@ -73,7 +17,7 @@ export const Board: React.FC<Props> = ({ initialGameState }) => {
     const [availableMoves, setAvailableMoves] = useState<Position[]>([])
     const [currentPiece, setCurrentPiece] = useState<Position | undefined>()
 
-    const { state, dispatch, canUndo } = useUndoReducer(myReducer, initialGameState)
+    const { state, dispatch, canUndo } = useUndoReducer(boardReducer, initialGameState)
 
     useEffect(() => {
         if (state.turn === 'black' && !state.gameOver) {
