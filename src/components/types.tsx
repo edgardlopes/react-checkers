@@ -11,3 +11,12 @@ export type Piece = {
 } | null
 
 export type BoardSchema = Piece[][]
+
+export type Score = Record<Color, number>
+
+export type BoardWithScoreState = {
+    board: BoardSchema
+    score: Score
+    turn: Color
+    gameOver: boolean
+}

@@ -1,12 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { Board } from './components/Board';
+import './App.css'
+import { Board } from './components/Board'
+import { getGameState } from './utils/localStorageState'
+import { BoardWithScoreState } from './components/types'
+import { createInitialBoard } from './board/boardConstants'
 
 function App() {
-  return (
-    <Board />
-  );
+    const gameState = getGameState<BoardWithScoreState>({
+        board: createInitialBoard(),
+        score: { black: 0, white: 0 },
+        turn: 'white',
+        gameOver: false,
+    })
+
+    return <Board initialGameState={gameState} />
 }
 
-export default App;
+export default App

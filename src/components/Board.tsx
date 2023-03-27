@@ -9,16 +9,7 @@ import { getRandom } from '../utils/getRandom'
 import useUndoReducer from '../utils/useUndo'
 import { BlackMan, WhiteMan } from './Piece'
 import { Row } from './Row'
-import { BoardSchema, Color, Piece, Position } from './types'
-
-type Score = Record<Color, number>
-
-interface BoardWithScoreState {
-    board: BoardSchema
-    score: Score
-    turn: Color
-    gameOver: boolean
-}
+import { BoardWithScoreState, Piece, Position } from './types'
 
 type BoardActionType = 'pieceMoved' | 'outOfMoves' | 'newGame'
 
@@ -72,24 +63,17 @@ const myReducer = (state: BoardWithScoreState, { type, payload }: BoardAction): 
     }
 
     return state
-
-    // throw new Error('invalid action')
 }
 
-export function Board() {
+type Props = {
+    initialGameState: BoardWithScoreState
+}
+
+export const Board: React.FC<Props> = ({ initialGameState }) => {
     const [availableMoves, setAvailableMoves] = useState<Position[]>([])
     const [currentPiece, setCurrentPiece] = useState<Position | undefined>()
 
-    const { state, dispatch } = useUndoReducer(myReducer, {
-        board: createInitialBoard(),
-        score: { black: 0, white: 0 },
-        turn: 'white',
-        gameOver: false,
-    })
-
-    // useEffect(() => {
-    //     console.log(getPiecesByColor(state.board, state.turn))
-    // }, [state.board, state.turn])
+    const { state, dispatch, canUndo } = useUndoReducer(myReducer, initialGameState)
 
     useEffect(() => {
         if (state.turn === 'black' && !state.gameOver) {
@@ -104,9 +88,7 @@ export function Board() {
                 const randomMove = getRandom(piece.moves.length)
                 const move = piece.moves[randomMove]
 
-                // setTimeout(() => {
                 dispatch({ type: 'pieceMoved', payload: { sourcePosition: piece.position, finalPosition: move } })
-                // }, 1000)
             }
 
             console.log(availablePieces)
@@ -136,23 +118,9 @@ export function Board() {
     function squareClicked(finalPosition: Position) {
         if (!currentPiece) throw new Error('Does not have selected piece')
 
-        // console.log(`moving piece ${currentPiece} to `, { row, col })
-
-        // const { board: newBoard, hasCaptured } = movePiece(board, currentPiece, { row, col })
-
-        // if (hasCaptured) {
-        //     setScore({ ...score, [turn]: score[turn] + 1 })
-        // }
-
-        // if (borderLimit[turn] === row) {
-        //     newBoard[row][col]!.isKing = true
-        // }
-
         dispatch({ type: 'pieceMoved', payload: { sourcePosition: currentPiece, finalPosition } })
 
-        // setBoard(newBoard)
         setCurrentPiece(undefined)
-        // setTurn(turn === 'white' ? 'black' : 'white')
         setAvailableMoves([])
     }
 
@@ -171,7 +139,13 @@ export function Board() {
             </div>
 
             <div className="info board">
-                <button onClick={() => dispatch({ type: 'UNDO' })}>Undo</button>
+                <div className="button-group">
+                    <button disabled={!canUndo} onClick={() => dispatch({ type: 'UNDO' })}>
+                        Undo
+                    </button>
+                    <button onClick={() => dispatch({ type: 'newGame' })}>New Game</button>
+                </div>
+
                 <div className="current-turn">
                     <span>Current turn</span>
                     {state.turn === 'black' ? <BlackMan onClick={() => {}} /> : <WhiteMan onClick={() => {}} />}

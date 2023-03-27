@@ -1,4 +1,5 @@
 import { useReducer } from 'react'
+import { setGameState } from './localStorageState'
 
 const useUndoReducer = <S>(reducer: (state: S, action: any) => S, initialState: S) => {
     const undoState: any = {
@@ -22,6 +23,8 @@ const useUndoReducer = <S>(reducer: (state: S, action: any) => S, initialState: 
             }
         }
 
+        setGameState(newPresent)
+
         return {
             past: [state.present, ...state.past],
             present: newPresent,
@@ -31,8 +34,8 @@ const useUndoReducer = <S>(reducer: (state: S, action: any) => S, initialState: 
 
     return {
         state: state.present,
-        undo: () => dispatch({ type: 'UNDO' }),
         dispatch,
+        canUndo: !!state.past.length,
     }
 }
 
