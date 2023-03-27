@@ -25,11 +25,7 @@ export const Row: React.FC<Props> = ({ rowIndex, data, availableMoves = [], piec
         const { color, isKing } = piece
 
         if (color === 'black') {
-            return isKing ? (
-                <BlackKing onClick={(type) => pieceClicked({ row: rowIndex, col: colIndex }, type)} />
-            ) : (
-                <BlackMan onClick={(type) => pieceClicked({ row: rowIndex, col: colIndex }, type)} />
-            )
+            return isKing ? <BlackKing /> : <BlackMan />
         }
 
         return isKing ? <WhiteKing onClick={(type) => pieceClicked({ row: rowIndex, col: colIndex }, type)} /> : <WhiteMan onClick={(type) => pieceClicked({ row: rowIndex, col: colIndex }, type)} />
