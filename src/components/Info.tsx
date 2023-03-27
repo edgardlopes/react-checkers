@@ -22,7 +22,7 @@ export const Info: React.FC<Props> = ({ score, turn, canUndo, onUndoClick, onNew
                 <button onClick={onNewGameClick}>New Game</button>
             </div>
 
-            <div className="current-turn">
+            <div className="current-turn" data-testid={`current-turn-${turn === 'black' ? 'black' : 'white'}`}>
                 <span>Current turn</span>
                 {turn === 'black' ? <BlackMan onClick={() => {}} /> : <WhiteMan onClick={() => {}} />}
             </div>

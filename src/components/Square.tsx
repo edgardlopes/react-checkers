@@ -17,7 +17,7 @@ export const Square: React.FC<Props> = ({ column, onClick, row, selected, childr
     const isLightString = isLight ? 'light' : 'dark'
 
     return (
-        <div onClick={onClick} data-testid={`square-${isLightString}`} className={`square ${isLightString}`}>
+        <div onClick={onClick} data-testid={`square-${row}-${column}`} className={`square ${isLightString}`}>
             {selected && <div data-testid="highlighted" className="blurred"></div>}
             {children}
         </div>
