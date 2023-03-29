@@ -1,6 +1,22 @@
-# Getting Started with Create React App
+
+
+# Checkers Game
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+The game is a simple Checkers game between you and the machine, the machine turn is a random movement.
+
+## Additional features:
+
+Besides the traditional rules, the game has these additional features:
+- Undo last movement
+- Reload the game without lost its state.
+- Start new game.
+
+## Approach 
+I've decided to build the most straightforward solution, avoiding external dependencies, even for state management and styles
+
+To manage the state, I've followed [this approach](https://react.dev/learn/sharing-state-between-components#lifting-state-up-by-example)
 
 ## Available Scripts
 
