@@ -2,6 +2,8 @@
 
 # Checkers Game
 
+Live demo [here](https://master.d1kwomcodtffd9.amplifyapp.com/)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 The game is a simple Checkers game between you and the machine, the machine turn is a random movement.
