@@ -2,7 +2,7 @@
 
 # Checkers Game
 
-Live demo [here](https://master.d1kwomcodtffd9.amplifyapp.com/)
+Live demo [here](https://react-checkers-one.vercel.app/)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
